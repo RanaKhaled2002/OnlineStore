@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using OnlineStore.Repository.Data;
 using OnlineStore.Repository.Data.Contexts;
 
 namespace OnlineStore.APIs
@@ -35,6 +36,7 @@ namespace OnlineStore.APIs
             try
             {
                 await context.Database.MigrateAsync();
+                await StoreDbContextSeed.SeedAsync(context);
             }
             catch (Exception ex)
             {
