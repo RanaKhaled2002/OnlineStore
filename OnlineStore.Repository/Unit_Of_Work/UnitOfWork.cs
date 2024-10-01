@@ -10,11 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineStore.Repository.UnitOfWork
+namespace OnlineStore.Repository.Unit_Of_Work
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public StoreDbContext _Context;
+        private readonly StoreDbContext _Context;
         private Hashtable _repositories;
 
         public UnitOfWork(StoreDbContext context)
@@ -37,9 +37,9 @@ namespace OnlineStore.Repository.UnitOfWork
             {
                 var repoistory = new GenericRepository<TEntity, TKey>(_Context);
 
-                _repositories.Add(type,repoistory);
+                _repositories.Add(type, repoistory);
             }
-            return _repositories[type] as IGenericRepository<TEntity,TKey>;
+            return _repositories[type] as IGenericRepository<TEntity, TKey>;
         }
     }
 }

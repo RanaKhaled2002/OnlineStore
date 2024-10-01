@@ -3,7 +3,6 @@ using OnlineStore.Core.DTOs.Products;
 using OnlineStore.Core.Entities;
 using OnlineStore.Core.Services.Contract;
 using OnlineStore.Core.UnitOfWork.Contract;
-using OnlineStore.Repository.UnitOfWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +16,7 @@ namespace OnlineStore.Service.Services.Products
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IMapper _mapper;
 
-        public ProductService(UnitOfWork unitOfWork , IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork , IMapper mapper)
         {
             _UnitOfWork = unitOfWork;
             _mapper = mapper;

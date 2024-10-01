@@ -1,7 +1,14 @@
 
 using Microsoft.EntityFrameworkCore;
+using OnlineStore.Core.Mapping.Products;
+using OnlineStore.Core.Repositories.Contract;
+using OnlineStore.Core.Services.Contract;
+using OnlineStore.Core.UnitOfWork.Contract;
 using OnlineStore.Repository.Data;
 using OnlineStore.Repository.Data.Contexts;
+using OnlineStore.Repository.Repositories;
+using OnlineStore.Repository.Unit_Of_Work;
+using OnlineStore.Service.Services.Products;
 
 namespace OnlineStore.APIs
 {
@@ -22,6 +29,10 @@ namespace OnlineStore.APIs
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+            builder.Services.AddScoped<IProductService,ProductService>();
+            builder.Services.AddAutoMapper(M => M.AddProfile(new ProductProfile()));
 
             var app = builder.Build();
 
