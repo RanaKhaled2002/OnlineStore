@@ -12,5 +12,7 @@ namespace OnlineStore.Core.Specification
     {
         public Expression<Func<TEntity, bool>> Criteria { get; set; }
         public List<Expression<Func<TEntity,Object>>> Includes {  get; set; }
+        public Expression<Func<TEntity,object>> OrderBy { get; set; }
+        public Expression<Func<TEntity,object>> OrderByDesc { get; set; }
     }
 }
