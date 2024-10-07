@@ -18,9 +18,9 @@ namespace OnlineStore.APIs.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProduct([FromQuery]string? sort)
+        public async Task<IActionResult> GetAllProduct([FromQuery]string? sort, [FromQuery] int? brandId, [FromQuery] int? typeId)
         {
-            var Result = await _productService.GetAllProductsAsync(sort);
+            var Result = await _productService.GetAllProductsAsync(sort, brandId, typeId);
             return Ok(Result);
         }
 

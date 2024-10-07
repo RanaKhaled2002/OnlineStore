@@ -9,7 +9,8 @@ namespace OnlineStore.Core.Specification.Products
 {
     public class ProductSpecification : BaseSpecification<Product,int>
     {
-        public ProductSpecification(string? sort) 
+        public ProductSpecification(string? sort , int? brandId, int? typeId ) : 
+            base(P => (! brandId.HasValue || brandId== P.BrandId) && (!typeId.HasValue ||typeId == P.TypeId))
         {
             if(!string.IsNullOrEmpty(sort))
             {
