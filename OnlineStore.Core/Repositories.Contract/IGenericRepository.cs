@@ -1,4 +1,5 @@
 ﻿using OnlineStore.Core.Entities;
+using OnlineStore.Core.Specification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace OnlineStore.Core.Repositories.Contract
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(TKey id);
+        Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity,TKey> spec);
+        Task<TEntity> GetByIdWithSpecAsync(ISpecification<TEntity, TKey> spec);
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);

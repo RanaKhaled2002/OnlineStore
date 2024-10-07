@@ -2,7 +2,9 @@
 using Microsoft.IdentityModel.Tokens;
 using OnlineStore.Core.Entities;
 using OnlineStore.Core.Repositories.Contract;
+using OnlineStore.Core.Specification;
 using OnlineStore.Repository.Data.Contexts;
+using OnlineStore.Repository.Specification_Evalutor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +53,21 @@ namespace OnlineStore.Repository.Repositories
         public void Delete(TEntity entity)
         {
             _Context.Remove(entity);
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity, TKey> spec)
+        {
+            return await ApplySpecification(spec).ToListAsync();
+        }
+
+        public async Task<TEntity> GetByIdWithSpecAsync(ISpecification<TEntity, TKey> spec)
+        {
+            return await ApplySpecification(spec).FirstOrDefaultAsync();
+        }
+
+        private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity, TKey> spec)
+        {
+            return SpecificationEvalutor<TEntity,TKey>.GetQuery(_Context.Set<TEntity>(), spec);
         }
     }
 }
