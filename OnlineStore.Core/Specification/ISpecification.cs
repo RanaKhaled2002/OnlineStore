@@ -14,5 +14,8 @@ namespace OnlineStore.Core.Specification
         public List<Expression<Func<TEntity,Object>>> Includes {  get; set; }
         public Expression<Func<TEntity,object>> OrderBy { get; set; }
         public Expression<Func<TEntity,object>> OrderByDesc { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
+        public bool IsPagination { get; set; }
     }
 }

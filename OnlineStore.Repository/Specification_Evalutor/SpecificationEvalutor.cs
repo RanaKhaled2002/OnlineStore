@@ -30,6 +30,11 @@ namespace OnlineStore.Repository.Specification_Evalutor
                 Query = Query.OrderByDescending(spec.OrderByDesc);
             }
 
+            if(spec.IsPagination)
+            {
+                Query = Query.Skip(spec.Skip).Take(spec.Take);
+            }
+
             Query = spec.Includes.Aggregate(Query, (CurrentQuery, IncludeExpression) => CurrentQuery.Include(IncludeExpression));
 
             return Query;
