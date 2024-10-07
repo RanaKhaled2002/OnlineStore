@@ -2,6 +2,7 @@
 using OnlineStore.Core.DTOs.Products;
 using OnlineStore.Core.Entities;
 using OnlineStore.Core.Services.Contract;
+using OnlineStore.Core.Specification.Products;
 using OnlineStore.Core.UnitOfWork.Contract;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,14 @@ namespace OnlineStore.Service.Services.Products
 
         public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
         {
-            return _mapper.Map<IEnumerable<ProductDto>>(await _UnitOfWork.Repository<Product, int>().GetAllAsync());
+            var spec = new ProductSpecification();
+            return _mapper.Map<IEnumerable<ProductDto>>(await _UnitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec));
         }
 
         public async Task<ProductDto> GetProductById(int id)
         {
-          return _mapper.Map<ProductDto>( await _UnitOfWork.Repository<Product, int>().GetByIdAsync(id));
+            var spec =  new ProductSpecification(id);
+          return _mapper.Map<ProductDto>( await _UnitOfWork.Repository<Product, int>().GetByIdWithSpecAsync(spec));
         }
 
         public async Task<IEnumerable<BrandTypeDto>> GetAllBrandsAsync()
