@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.Core.DTOs.Products;
+using OnlineStore.Core.Helper;
 using OnlineStore.Core.Services.Contract;
+using OnlineStore.Core.Specification.Products;
 using OnlineStore.Service.Services.Products;
 
 namespace OnlineStore.APIs.Controllers
@@ -18,9 +21,9 @@ namespace OnlineStore.APIs.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProduct([FromQuery]string? sort, [FromQuery] int? brandId, [FromQuery] int? typeId, [FromQuery] int? pageIndex=1, [FromQuery] int? pageSize=5)
+        public async Task<IActionResult> GetAllProduct([FromQuery] ProductSpecParams productSpec)
         {
-            var Result = await _productService.GetAllProductsAsync(sort, brandId, typeId,pageIndex,pageSize);
+            var Result = await _productService.GetAllProductsAsync(productSpec);
             return Ok(Result);
         }
 

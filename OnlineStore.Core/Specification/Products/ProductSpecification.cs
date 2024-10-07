@@ -9,12 +9,12 @@ namespace OnlineStore.Core.Specification.Products
 {
     public class ProductSpecification : BaseSpecification<Product,int>
     {
-        public ProductSpecification(string? sort , int? brandId, int? typeId,int pageIndex,int pageSize ) : 
-            base(P => (! brandId.HasValue || brandId== P.BrandId) && (!typeId.HasValue ||typeId == P.TypeId))
+        public ProductSpecification(ProductSpecParams productSpec ) : 
+            base(P => (!productSpec.brandId.HasValue || productSpec.brandId == P.BrandId) && (!productSpec.typeId.HasValue ||productSpec.typeId == P.TypeId))
         {
-            if(!string.IsNullOrEmpty(sort))
+            if(!string.IsNullOrEmpty(productSpec.sort))
             {
-                switch (sort)
+                switch (productSpec.sort)
                 {
                     case "priceAsc":
                         AddOrderBy(P=>P.Price);
@@ -33,7 +33,7 @@ namespace OnlineStore.Core.Specification.Products
             }
 
             ApplyIncludes();
-            AddPagination(pageSize*(pageIndex-1),pageSize);
+            AddPagination(productSpec.pageSize * (productSpec.pageIndex - 1), productSpec.pageSize);
         }
 
         public ProductSpecification(int id) : base(P => P.Id == id)

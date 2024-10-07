@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OnlineStore.Repository.Repositories
 {
-    public class GenericRepository<TEntity,TKey> : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
+    public class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
         public readonly StoreDbContext _Context;
 
@@ -68,6 +68,11 @@ namespace OnlineStore.Repository.Repositories
         private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity, TKey> spec)
         {
             return SpecificationEvalutor<TEntity,TKey>.GetQuery(_Context.Set<TEntity>(), spec);
+        }
+
+        public async Task<int> GetCountAsync(ISpecification<TEntity, TKey> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
         }
     }
 }

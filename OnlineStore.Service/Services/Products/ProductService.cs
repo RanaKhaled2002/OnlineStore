@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using OnlineStore.Core.DTOs.Products;
 using OnlineStore.Core.Entities;
+using OnlineStore.Core.Helper;
 using OnlineStore.Core.Services.Contract;
 using OnlineStore.Core.Specification.Products;
 using OnlineStore.Core.UnitOfWork.Contract;
@@ -23,10 +24,16 @@ namespace OnlineStore.Service.Services.Products
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort, int? brandId, int? typeId,int? pageIndex,int? pageSize)
+        public async Task<PaginationResponse<ProductDto>> GetAllProductsAsync(ProductSpecParams productSpec)
         {
-            var spec = new ProductSpecification(sort, brandId, typeId,pageIndex.Value,pageSize.Value);
-            return _mapper.Map<IEnumerable<ProductDto>>(await _UnitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec));
+            var spec = new ProductSpecification(productSpec);
+            var Result = _mapper.Map<IEnumerable<ProductDto>>(await _UnitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec));
+
+            var countSpec = new ProductWithCountSpecification(productSpec);
+
+            var Count = await _UnitOfWork.Repository<Product, int>().GetCountAsync(countSpec);
+
+            return new PaginationResponse<ProductDto>(productSpec.pageSize,productSpec.pageIndex,Count,Result);
         }
 
         public async Task<ProductDto> GetProductById(int id)

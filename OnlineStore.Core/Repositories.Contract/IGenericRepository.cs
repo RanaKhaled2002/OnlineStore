@@ -14,6 +14,7 @@ namespace OnlineStore.Core.Repositories.Contract
         Task<TEntity> GetByIdAsync(TKey id);
         Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity,TKey> spec);
         Task<TEntity> GetByIdWithSpecAsync(ISpecification<TEntity, TKey> spec);
+        Task<int> GetCountAsync(ISpecification<TEntity,TKey> spec);
         Task AddAsync(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
