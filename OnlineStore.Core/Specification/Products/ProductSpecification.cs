@@ -10,7 +10,7 @@ namespace OnlineStore.Core.Specification.Products
     public class ProductSpecification : BaseSpecification<Product,int>
     {
         public ProductSpecification(ProductSpecParams productSpec ) : 
-            base(P => (!productSpec.brandId.HasValue || productSpec.brandId == P.BrandId) && (!productSpec.typeId.HasValue ||productSpec.typeId == P.TypeId))
+            base(  P => (string.IsNullOrEmpty(productSpec.Search) || P.Name.ToLower().Contains(productSpec.Search)) && (!productSpec.brandId.HasValue || productSpec.brandId == P.BrandId) && (!productSpec.typeId.HasValue ||productSpec.typeId == P.TypeId))
         {
             if(!string.IsNullOrEmpty(productSpec.sort))
             {
