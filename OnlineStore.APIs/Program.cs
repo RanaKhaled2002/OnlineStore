@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.APIs.Error;
+using OnlineStore.APIs.Helper;
 using OnlineStore.APIs.MiddleWares;
 using OnlineStore.Core.Mapping.Products;
 using OnlineStore.Core.Repositories.Contract;
@@ -22,80 +23,11 @@ namespace OnlineStore.APIs
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddDbContext<StoreDbContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = (actionContext) =>
-                {
-                    var errors = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
-                                            .SelectMany(P => P.Value.Errors)
-                                            .Select(E => E.ErrorMessage)
-                                            .ToArray();
-
-                    var response = new ApiValidationErrorResponse()
-                    {
-                        Errors = errors
-                    };
-                    return new BadRequestObjectResult(response);
-                };
-            });
-
-            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
-            builder.Services.AddScoped<IProductService,ProductService>();
-            builder.Services.AddAutoMapper(M => M.AddProfile(new ProductProfile(builder.Configuration)));
+            builder.Services.AddDependency(builder.Configuration);
 
             var app = builder.Build();
 
-            #region Update Database
-            using var scope = app.Services.CreateScope();
-
-            var services = scope.ServiceProvider;
-
-            var context = services.GetRequiredService<StoreDbContext>();
-            var loggerFactoey = services.GetRequiredService<ILoggerFactory>();
-
-            try
-            {
-                await context.Database.MigrateAsync();
-                await StoreDbContextSeed.SeedAsync(context);
-            }
-            catch (Exception ex)
-            {
-                var logger = loggerFactoey.CreateLogger<Program>();
-                logger.LogError(ex, "There Are Problems During Apply Migrations !!");
-            }
-            #endregion
-
-            app.UseMiddleware<ExceptionMiddleware>();
-
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-            app.UseStaticFiles();
-
-            app.MapControllers();
+            await app.ConfigureMiddelwareAsync();
 
             app.Run();
         }

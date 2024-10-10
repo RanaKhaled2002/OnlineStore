@@ -5,9 +5,8 @@ using OnlineStore.Repository.Data.Contexts;
 
 namespace OnlineStore.APIs.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BuggyController : ControllerBase
+    
+    public class BuggyController : BaseApiController
     {
         private readonly StoreDbContext _context;
 

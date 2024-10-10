@@ -9,9 +9,8 @@ using OnlineStore.Service.Services.Products;
 
 namespace OnlineStore.APIs.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductController : ControllerBase
+    
+    public class ProductController : BaseApiController
     {
         private readonly IProductService _productService;
 
