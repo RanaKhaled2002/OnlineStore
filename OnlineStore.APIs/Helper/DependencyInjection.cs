@@ -2,11 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.APIs.Error;
 using OnlineStore.Core.Mapping.Products;
+using OnlineStore.Core.Repositories.Contract.Basket;
 using OnlineStore.Core.Services.Contract;
 using OnlineStore.Core.UnitOfWork.Contract;
 using OnlineStore.Repository.Data.Contexts;
 using OnlineStore.Repository.Unit_Of_Work;
 using OnlineStore.Service.Services.Products;
+using OnlineStore.Repository.Repositories.Basket_Module;
+using StackExchange.Redis;
+using OnlineStore.Core.Mapping.Basket;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -20,6 +24,7 @@ namespace OnlineStore.APIs.Helper
             service.AddValidationErrorSerivce();
             service.AddScopedSerivce();
             service.AddAutoMapperSerivce(configuration);
+            service.AddRadisSerivce(configuration);
             return service;
         }
 
@@ -76,6 +81,7 @@ namespace OnlineStore.APIs.Helper
 
             service.AddScoped<IUnitOfWork, UnitOfWork>();
             service.AddScoped<IProductService, ProductService>();
+            service.AddScoped<IBasketRepository, BasketRepository>();
             return service;
         }
 
@@ -83,9 +89,22 @@ namespace OnlineStore.APIs.Helper
         {
 
             service.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
+            service.AddAutoMapper(M => M.AddProfile(new BasketProfile()));
 
             return service;
         }
+
+        private static IServiceCollection AddRadisSerivce(this IServiceCollection service, IConfiguration configuration)
+        {
+
+            service.AddSingleton<IConnectionMultiplexer>((ServiceProvider) =>
+            {
+                var connection = configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(connection);
+            });
+            return service;
+        }
+
 
 
     }

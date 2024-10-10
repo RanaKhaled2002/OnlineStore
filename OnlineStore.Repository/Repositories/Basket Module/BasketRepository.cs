@@ -8,9 +8,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace OnlineStore.Repository.Repositories.Basket
+namespace OnlineStore.Repository.Repositories.Basket_Module
 {
-    internal class BasketRepository : IBasketRepository
+   public class BasketRepository : IBasketRepository
     {
         private readonly IDatabase _database;
         public BasketRepository(IConnectionMultiplexer radis) 
