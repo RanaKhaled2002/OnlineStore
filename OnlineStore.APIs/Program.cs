@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.APIs.Error;
+using OnlineStore.APIs.MiddleWares;
 using OnlineStore.Core.Mapping.Products;
 using OnlineStore.Core.Repositories.Contract;
 using OnlineStore.Core.Services.Contract;
@@ -73,8 +74,11 @@ namespace OnlineStore.APIs
             {
                 var logger = loggerFactoey.CreateLogger<Program>();
                 logger.LogError(ex, "There Are Problems During Apply Migrations !!");
-            } 
+            }
             #endregion
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
