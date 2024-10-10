@@ -1,5 +1,8 @@
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
+using OnlineStore.APIs.Error;
 using OnlineStore.Core.Mapping.Products;
 using OnlineStore.Core.Repositories.Contract;
 using OnlineStore.Core.Services.Contract;
@@ -28,6 +31,23 @@ namespace OnlineStore.APIs
             builder.Services.AddDbContext<StoreDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var errors = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
+                                            .SelectMany(P => P.Value.Errors)
+                                            .Select(E => E.ErrorMessage)
+                                            .ToArray();
+
+                    var response = new ApiValidationErrorResponse()
+                    {
+                        Errors = errors
+                    };
+                    return new BadRequestObjectResult(response);
+                };
             });
 
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
