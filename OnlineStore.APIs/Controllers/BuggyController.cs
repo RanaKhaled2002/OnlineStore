@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.APIs.Error;
 using OnlineStore.Repository.Data.Contexts;
 
 namespace OnlineStore.APIs.Controllers
@@ -18,7 +19,7 @@ namespace OnlineStore.APIs.Controllers
         [HttpGet("BadRequest")]
         public async Task<IActionResult> GetBadRequestError()
         {
-            return BadRequest();
+            return BadRequest(new ApiErrorResponse(400));
         }
 
         [HttpGet("BadRequest/{id}")]
@@ -31,7 +32,7 @@ namespace OnlineStore.APIs.Controllers
         public async Task<IActionResult> GetNotFoundError()
         {
             var brands = await _context.Brands.FindAsync(100);
-            if (brands is null) return NotFound();
+            if (brands is null) return NotFound(new ApiErrorResponse(400,"Brand With Id: 100 Not Found"));
             return Ok(brands);
         }
 
@@ -48,7 +49,7 @@ namespace OnlineStore.APIs.Controllers
         [HttpGet("Unauthorized")]
         public async Task<IActionResult> GetUnAuthorizedError()
         {
-            return Unauthorized();
+            return Unauthorized(new ApiErrorResponse(401));
         }
     }
 }
