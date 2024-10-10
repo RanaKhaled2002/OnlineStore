@@ -8,7 +8,7 @@ namespace OnlineStore.Core.Entities.Basket_Module
 {
     public class BasketItem
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string ProductName { get; set; }
         public string PicuterUrl { get; set; }
         public string Brand { get; set; }
