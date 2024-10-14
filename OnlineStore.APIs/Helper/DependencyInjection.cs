@@ -16,6 +16,10 @@ using OnlineStore.Core.Services.Contract.Cache;
 using OnlineStore.Repository.Identity.Contexts;
 using OnlineStore.Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using OnlineStore.Core.Services.Contract.Jwt;
+using OnlineStore.Service.Services.Jwt;
+using OnlineStore.Core.Services.Contract.User;
+using OnlineStore.Service.Services.Auth;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -93,6 +97,8 @@ namespace OnlineStore.APIs.Helper
             service.AddScoped<IProductService, ProductService>();
             service.AddScoped<IBasketRepository, BasketRepository>();
             service.AddScoped<ICacheService,CacheService>();
+            service.AddScoped<IJwtService,JwtService>();
+            service.AddScoped<IUserService , UserService>();
             return service;
         }
 
