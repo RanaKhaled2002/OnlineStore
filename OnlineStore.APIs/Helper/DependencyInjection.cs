@@ -11,6 +11,8 @@ using OnlineStore.Service.Services.Products;
 using OnlineStore.Repository.Repositories.Basket_Module;
 using StackExchange.Redis;
 using OnlineStore.Core.Mapping.Basket;
+using OnlineStore.Service.Services.Cache;
+using OnlineStore.Core.Services.Contract.Cache;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -82,6 +84,7 @@ namespace OnlineStore.APIs.Helper
             service.AddScoped<IUnitOfWork, UnitOfWork>();
             service.AddScoped<IProductService, ProductService>();
             service.AddScoped<IBasketRepository, BasketRepository>();
+            service.AddScoped<ICacheService,CacheService>();
             return service;
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using OnlineStore.APIs.Cache;
 using OnlineStore.APIs.Error;
 using OnlineStore.Core.DTOs.Products;
 using OnlineStore.Core.Helper;
@@ -23,6 +24,7 @@ namespace OnlineStore.APIs.Controllers
         [ProducesResponseType(typeof(PaginationResponse<ProductDto>) , StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse) , StatusCodes.Status404NotFound)]
         [HttpGet]
+        [Cached(100)]
         public async Task<ActionResult<PaginationResponse<ProductDto>>> GetAllProduct([FromQuery] ProductSpecParams productSpec)
         {
             var Result = await _productService.GetAllProductsAsync(productSpec);
