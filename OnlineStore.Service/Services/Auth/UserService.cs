@@ -70,5 +70,7 @@ namespace OnlineStore.Service.Services.Auth
         {
            return await _userManager.FindByEmailAsync(email) is not null;
         }
+
+       
     }
 }

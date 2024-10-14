@@ -75,5 +75,27 @@ namespace OnlineStore.APIs.Controllers
 
             return Ok(_mapper.Map<AddressDTO>(user.Address));
         }
+
+        [Authorize]
+        [HttpPut("updateAddress")]
+        public async Task<ActionResult<UserDTO>> UpdateCurrentUserAddress(AddressDTO address)
+        {
+            var user = await _userManager.FindByEmailWithAddressAsync(User);
+
+            if (user is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
+
+            user.Address.LName = address.LName;
+            user.Address.FName = address.FName;
+            user.Address.City = address.City;
+            user.Address.Country = address.Country;
+            user.Address.Street = address.Street;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest,"Fail To Update"));
+
+            return Ok(_mapper.Map<AddressDTO>(user.Address));
+        }
+
     }
 }
