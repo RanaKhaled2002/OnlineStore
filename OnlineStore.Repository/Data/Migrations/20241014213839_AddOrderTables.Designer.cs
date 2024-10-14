@@ -12,7 +12,7 @@ using OnlineStore.Repository.Data.Contexts;
 namespace OnlineStore.Repository.Data.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20241014212144_AddOrderTables")]
+    [Migration("20241014213839_AddOrderTables")]
     partial class AddOrderTables
     {
         /// <inheritdoc />
@@ -110,7 +110,7 @@ namespace OnlineStore.Repository.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decima(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

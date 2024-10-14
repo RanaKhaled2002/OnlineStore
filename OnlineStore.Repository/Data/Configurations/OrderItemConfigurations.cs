@@ -15,7 +15,7 @@ namespace OnlineStore.Repository.Data.Configurations
         {
             builder.OwnsOne(OI => OI.Product, P => P.WithOwner());
 
-            builder.Property(P => P.Price).HasColumnType("decima(18,2)");
+            builder.Property(P => P.Price).HasColumnType("decimal(18,2)");
         }
     }
 }

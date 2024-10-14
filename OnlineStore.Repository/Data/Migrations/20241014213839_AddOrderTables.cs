@@ -67,7 +67,7 @@ namespace OnlineStore.Repository.Data.Migrations
                     Product_ProductId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Product_ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Product_PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decima(18,2)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: true),
                     CreatAt = table.Column<DateTime>(type: "datetime2", nullable: false)
