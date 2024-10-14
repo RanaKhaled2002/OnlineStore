@@ -51,6 +51,7 @@ namespace OnlineStore.APIs.Helper
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseStaticFiles();

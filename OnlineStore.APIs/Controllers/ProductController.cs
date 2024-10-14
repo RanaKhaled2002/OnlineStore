@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.APIs.Cache;
@@ -25,6 +26,7 @@ namespace OnlineStore.APIs.Controllers
         [ProducesResponseType(typeof(ApiErrorResponse) , StatusCodes.Status404NotFound)]
         [HttpGet]
         [Cached(100)]
+        [Authorize]
         public async Task<ActionResult<PaginationResponse<ProductDto>>> GetAllProduct([FromQuery] ProductSpecParams productSpec)
         {
             var Result = await _productService.GetAllProductsAsync(productSpec);
@@ -37,6 +39,7 @@ namespace OnlineStore.APIs.Controllers
         [ProducesResponseType(typeof(PaginationResponse<BrandTypeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
         [HttpGet("brands")]
+        [Authorize]
         public async Task<ActionResult<PaginationResponse<BrandTypeDto>>> GetAllBrands()
         {
             var Result = await _productService.GetAllBrandsAsync();
@@ -49,6 +52,7 @@ namespace OnlineStore.APIs.Controllers
         [ProducesResponseType(typeof(PaginationResponse<BrandTypeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
         [HttpGet("types")]
+        [Authorize]
         public async Task<ActionResult<PaginationResponse<BrandTypeDto>>> GetAllTypes()
         {
             var result = await _productService.GetAllTypesAsync();
@@ -60,6 +64,7 @@ namespace OnlineStore.APIs.Controllers
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<PaginationResponse<ProductDto>>> GetProductById(int? id)
         {
             if (id is null) return BadRequest(StatusCodes.Status400BadRequest);
