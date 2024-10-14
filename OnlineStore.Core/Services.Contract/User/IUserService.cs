@@ -11,5 +11,6 @@ namespace OnlineStore.Core.Services.Contract.User
     {
         Task<UserDTO> LoginAsync(LoginDTO login);
         Task<UserDTO> RegisterAsync(RegisterDTO register);
+        Task<bool> CheckEmailExistAsync(string email);
     }
 }

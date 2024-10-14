@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using OnlineStore.Core.Services.Contract.Jwt;
 
 namespace OnlineStore.Service.Services.Auth
@@ -24,6 +23,7 @@ namespace OnlineStore.Service.Services.Auth
             _signInManger = signInManger;
             _token = token;
         }
+
         public async Task<UserDTO> LoginAsync(LoginDTO login)
         {
             var user = await _userManager.FindByEmailAsync(login.Email);
@@ -41,9 +41,34 @@ namespace OnlineStore.Service.Services.Auth
            
         }
 
-        public Task<UserDTO> RegisterAsync(RegisterDTO register)
+        public async Task<UserDTO> RegisterAsync(RegisterDTO register)
         {
-            throw new NotImplementedException();
+            if (await CheckEmailExistAsync(register.Email)) return null;
+
+            var user = new AppUser()
+            {
+                Email = register.Email,
+                DisplayName = register.DisplayName,
+                PhoneNumber = register.PhoneNumber,
+                UserName = register.Email.Split("@")[0]
+            };
+
+           var result =await  _userManager.CreateAsync(user, register.Password);
+
+            if (!result.Succeeded) return null;
+
+            return new UserDTO()
+            {
+                DisplayName = user.DisplayName,
+                Email = user.Email,
+                Token = await _token.CreateTokenAsync(user, _userManager)
+            };
+
+        }
+
+        public async Task<bool> CheckEmailExistAsync(string email)
+        {
+           return await _userManager.FindByEmailAsync(email) is not null;
         }
     }
 }
