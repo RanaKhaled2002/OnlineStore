@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineStore.Core.Entities;
+using OnlineStore.Core.Entities.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,8 @@ namespace OnlineStore.Repository.Data.Contexts
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductBrand> Brands { get; set; }
         public DbSet<ProductType> Types { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
     }
 }
