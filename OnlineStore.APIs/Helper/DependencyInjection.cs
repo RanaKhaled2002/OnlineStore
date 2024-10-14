@@ -152,6 +152,7 @@ namespace OnlineStore.APIs.Helper
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:key"]))
                 };
             });
+            service.AddAuthorization();
             return service;
         }
 
