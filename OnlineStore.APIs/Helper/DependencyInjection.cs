@@ -23,6 +23,7 @@ using OnlineStore.Service.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using OnlineStore.Core.Mapping.Auth;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -111,6 +112,7 @@ namespace OnlineStore.APIs.Helper
 
             service.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
             service.AddAutoMapper(M => M.AddProfile(new BasketProfile()));
+            service.AddAutoMapper(M => M.AddProfile(new AuthProfile()));
 
             return service;
         }

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineStore.APIs.Error;
+using OnlineStore.APIs.Extention;
 using OnlineStore.Core.DTOs.Auth;
 using OnlineStore.Core.Entities.Identity;
 using OnlineStore.Core.Services.Contract.Jwt;
@@ -16,12 +19,14 @@ namespace OnlineStore.APIs.Controllers
         private readonly IUserService _userService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtService _token;
+        private readonly IMapper _mapper;
 
-        public AccountController(IUserService userService,UserManager<AppUser> userManager,IJwtService token)
+        public AccountController(IUserService userService,UserManager<AppUser> userManager,IJwtService token,IMapper mapper)
         {
             _userService = userService;
             _userManager = userManager;
             _token = token;
+            _mapper = mapper;
         }
 
         [HttpPost("login")]
@@ -40,6 +45,7 @@ namespace OnlineStore.APIs.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpGet("GetCrruentUser")]
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
@@ -57,6 +63,17 @@ namespace OnlineStore.APIs.Controllers
                 Email = user.Email,
                 Token = await _token.CreateTokenAsync(user,_userManager)
             });
+        }
+
+        [Authorize]
+        [HttpGet("address")]
+        public async Task<ActionResult<UserDTO>> GetCurrentUserAddress()
+        {
+            var user = await _userManager.FindByEmailWithAddressAsync(User);
+
+            if (user is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
+
+            return Ok(_mapper.Map<AddressDTO>(user.Address));
         }
     }
 }

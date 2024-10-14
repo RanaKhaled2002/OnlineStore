@@ -31,7 +31,6 @@ namespace OnlineStore.Service.Services.Jwt
             {
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Name,user.DisplayName),
-                new Claim(ClaimTypes.MobilePhone,user.PhoneNumber),
             };
 
             var UserRoles = await userManger.GetRolesAsync(user); 
