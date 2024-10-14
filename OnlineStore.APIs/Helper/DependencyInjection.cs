@@ -13,6 +13,9 @@ using StackExchange.Redis;
 using OnlineStore.Core.Mapping.Basket;
 using OnlineStore.Service.Services.Cache;
 using OnlineStore.Core.Services.Contract.Cache;
+using OnlineStore.Repository.Identity.Contexts;
+using OnlineStore.Core.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -27,6 +30,7 @@ namespace OnlineStore.APIs.Helper
             service.AddScopedSerivce();
             service.AddAutoMapperSerivce(configuration);
             service.AddRadisSerivce(configuration);
+            service.AddIdentityService();
             return service;
         }
 
@@ -52,6 +56,10 @@ namespace OnlineStore.APIs.Helper
             service.AddDbContext<StoreDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
+            service.AddDbContext<StoreIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
             });
             return service;
         }
@@ -108,7 +116,11 @@ namespace OnlineStore.APIs.Helper
             return service;
         }
 
-
-
+        public static IServiceCollection AddIdentityService(this IServiceCollection service)
+        {
+            service.AddIdentity<AppUser, IdentityRole>()
+                   .AddEntityFrameworkStores<StoreIdentityDbContext>();
+            return service;
+        }
     }
 }

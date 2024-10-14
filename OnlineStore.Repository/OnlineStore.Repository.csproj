@@ -15,4 +15,8 @@
     <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Identity\Configurations\" />
+  </ItemGroup>
+
 </Project>
