@@ -24,6 +24,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OnlineStore.Core.Mapping.Auth;
+using OnlineStore.Service.Services.Orders;
+using OnlineStore.Core.Services.Contract.Orders;
+using OnlineStore.Core.Mapping.Orders;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -104,6 +107,7 @@ namespace OnlineStore.APIs.Helper
             service.AddScoped<ICacheService,CacheService>();
             service.AddScoped<IJwtService,JwtService>();
             service.AddScoped<IUserService , UserService>();
+            service.AddScoped<IOrderService , OrderService>();
             return service;
         }
 
@@ -113,6 +117,7 @@ namespace OnlineStore.APIs.Helper
             service.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
             service.AddAutoMapper(M => M.AddProfile(new BasketProfile()));
             service.AddAutoMapper(M => M.AddProfile(new AuthProfile()));
+            service.AddAutoMapper(M => M.AddProfile(new OrderProfile(configuration)));
 
             return service;
         }
