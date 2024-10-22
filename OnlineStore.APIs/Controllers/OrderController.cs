@@ -6,6 +6,7 @@ using OnlineStore.APIs.Error;
 using OnlineStore.Core.DTOs.Orders;
 using OnlineStore.Core.Entities.Order;
 using OnlineStore.Core.Services.Contract.Orders;
+using OnlineStore.Core.UnitOfWork.Contract;
 using System.Security.Claims;
 
 namespace OnlineStore.APIs.Controllers
@@ -15,11 +16,13 @@ namespace OnlineStore.APIs.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public OrderController(IOrderService orderService,IMapper mapper)
+        public OrderController(IOrderService orderService,IMapper mapper,IUnitOfWork unitOfWork)
         {
             _orderService = orderService;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -66,6 +69,14 @@ namespace OnlineStore.APIs.Controllers
             if (Order is null) return NotFound(new ApiErrorResponse(StatusCodes.Status404NotFound));
 
             return Ok(_mapper.Map<OrderReturnDto>(Order));
+        }
+
+        [HttpGet("DeliveryMethod")]
+        public async Task<IActionResult> GetDeliveryMethod()
+        {
+            var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod, int>().GetAllAsync();
+            if (deliveryMethod is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
+            return Ok(deliveryMethod);
         }
     }
 }
