@@ -2,6 +2,7 @@
 using OnlineStore.Core.Entities.Order;
 using OnlineStore.Core.Repositories.Contract.Basket;
 using OnlineStore.Core.Services.Contract.Orders;
+using OnlineStore.Core.Specification.Orders;
 using OnlineStore.Core.UnitOfWork.Contract;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace OnlineStore.Service.Services.Orders
             _unitOfWork = unitOfWork;
             _basketRepository = basketRepository;
         }
+
         public async Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
         {
             var basket = await _basketRepository.GetBasketAsync(basketId);
@@ -55,14 +57,24 @@ namespace OnlineStore.Service.Services.Orders
             return order;
         }
 
-        public Task<Order?> GetOrderByIdFromSpecificUserAsync(string buyerEmail, int orderId)
+        public async Task<Order?> GetOrderByIdFromSpecificUserAsync(string buyerEmail, int orderId)
         {
-            throw new NotImplementedException();
+            var spec = new OrderSpecification(buyerEmail, orderId);
+            var order = await _unitOfWork.Repository<Order,int>().GetByIdWithSpecAsync(spec);
+
+            if (order is null) return null;
+
+            return order;
         }
 
-        public Task<IEnumerable<Order>?> GetOrderFromSpecificUserAsync(string buyerEmail)
+        public async Task<IEnumerable<Order>?> GetOrderFromSpecificUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var spec = new OrderSpecification(buyerEmail);
+            var orders = await _unitOfWork.Repository<Order, int>().GetAllWithSpecAsync(spec);
+
+            if(orders  is null) return null;   
+
+            return orders;
         }
     }
 }
