@@ -8,6 +8,17 @@ namespace OnlineStore.Core.Entities.Order
 {
     public class Order : BaseEntity<int>
     {
+        public Order() { }
+        public Order(string buyerEmail,Address shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subTotal, string paymentInentId)
+        {
+            BuyerEmail = buyerEmail;
+            ShippingAddress = shippingAddress;
+            DeliveryMethod = deliveryMethod;
+            Items = items;
+            SubTotal = subTotal;
+            PaymentInentId = paymentInentId;
+        }
+
         public string BuyerEmail { get; set; }
 
         public DateTimeOffset orderDate { get; set; } = DateTimeOffset.UtcNow;
