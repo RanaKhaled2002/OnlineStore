@@ -10,5 +10,9 @@ namespace OnlineStore.Core.Entities.Basket_Module
     {
         public string Id { get; set; }
         public List<BasketItem> Items { get; set; }
+        public string? PaymentInentId { get; set; }
+        public int? DeliveryMethodId { get; set; }
+        public string? ClientSecret { get; set; }
+
     }
 }
