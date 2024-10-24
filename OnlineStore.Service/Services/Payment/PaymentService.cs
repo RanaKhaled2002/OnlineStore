@@ -3,6 +3,7 @@ using OnlineStore.Core.Entities.Basket_Module;
 using OnlineStore.Core.Entities.Order;
 using OnlineStore.Core.Repositories.Contract.Basket;
 using OnlineStore.Core.Services.Contract.Payment;
+using OnlineStore.Core.Specification.Orders;
 using OnlineStore.Core.UnitOfWork.Contract;
 using Stripe;
 using System;
@@ -87,6 +88,25 @@ namespace OnlineStore.Service.Services.Payment
             basket = await _basket.UpdateBasketAsync(basket);
             if (basket is null) return null;
             return basket;
+        }
+
+        public async Task<Order> UpdatePaymentIntentForSuccessedOrFailed(string PaymentIntentId, bool flag)
+        {
+            var spec = new OrderSpecificatioWithPaymentIntentId(PaymentIntentId);
+            var order = await _unitOfWork.Repository<Order, int>().GetByIdWithSpecAsync(spec);
+            if(flag)
+            {
+                order.Status = OrderStatus.PaymentRecived;
+            }
+            else
+            {
+                order.Status = OrderStatus.PaymentFaild; 
+            }
+
+            _unitOfWork.Repository<Order, int>().Update(order);
+            await _unitOfWork.CompleteAsync();
+
+            return order;
         }
     }
 }
