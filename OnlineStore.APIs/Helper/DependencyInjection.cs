@@ -27,6 +27,8 @@ using OnlineStore.Core.Mapping.Auth;
 using OnlineStore.Service.Services.Orders;
 using OnlineStore.Core.Services.Contract.Orders;
 using OnlineStore.Core.Mapping.Orders;
+using OnlineStore.Core.Services.Contract.Payment;
+using OnlineStore.Service.Services.Payment;
 
 namespace OnlineStore.APIs.Helper
 {
@@ -108,6 +110,7 @@ namespace OnlineStore.APIs.Helper
             service.AddScoped<IJwtService,JwtService>();
             service.AddScoped<IUserService , UserService>();
             service.AddScoped<IOrderService , OrderService>();
+            service.AddScoped<IPaymentService , PaymentService>();
             return service;
         }
 
