@@ -2,6 +2,7 @@
 using OnlineStore.Core.Entities.Order;
 using OnlineStore.Core.Repositories.Contract.Basket;
 using OnlineStore.Core.Services.Contract.Orders;
+using OnlineStore.Core.Services.Contract.Payment;
 using OnlineStore.Core.Specification.Orders;
 using OnlineStore.Core.UnitOfWork.Contract;
 using System;
@@ -16,11 +17,13 @@ namespace OnlineStore.Service.Services.Orders
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IBasketRepository _basketRepository;
+        private readonly IPaymentService _paymentService;
 
-        public OrderService(IUnitOfWork unitOfWork,IBasketRepository basketRepository)
+        public OrderService(IUnitOfWork unitOfWork,IBasketRepository basketRepository,IPaymentService paymentService)
         {
             _unitOfWork = unitOfWork;
             _basketRepository = basketRepository;
+            _paymentService = paymentService;
         }
 
         public async Task<Order> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
@@ -46,7 +49,15 @@ namespace OnlineStore.Service.Services.Orders
 
             var subTotal = orderItems.Sum(O => O.Price * O.Quantity);
 
-            var order = new Order(buyerEmail,shippingAddress,deliveryMethod,orderItems,subTotal,"");
+            if(!string.IsNullOrEmpty(basket.PaymentInentId))
+            {
+                var spec = new OrderSpecificatioWithPaymentIntentId(basket.PaymentInentId);
+                var ExOrder =await _unitOfWork.Repository<Order,int>().GetByIdWithSpecAsync(spec);
+                _unitOfWork.Repository<Order, int>().Delete(ExOrder);
+            }
+
+            var basketDto = await _paymentService.CreateOrUpdatePaymentIntentIdAsync(basketId);
+            var order = new Order(buyerEmail,shippingAddress,deliveryMethod,orderItems,subTotal,basketDto.PaymentInentId);
 
             await _unitOfWork.Repository<Order,int>().AddAsync(order);
 
